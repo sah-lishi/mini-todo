@@ -1,0 +1,23 @@
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import SignUp from './pages/auth/SignUp'
+import SignIn from './pages/auth/SignIn'
+import Dashboard from './pages/dashboard/Dashboard'
+import Layout from './Layout'
+import MyTodo from './pages/todo/MyTodo'
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignIn/>} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path='/home' element={<Layout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="mytodo" element={<MyTodo />} />
+        </Route>
+      </Routes>
+    </Router>
+  )
+}
+
+export default App
