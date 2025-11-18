@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    category: null
+    categories: []
 }
 
 const categorySlice = createSlice({
@@ -9,17 +9,17 @@ const categorySlice = createSlice({
     initialState,
     reducers: {
         setCategory: (state, action) => {
-            state.category = action.payload
+            state.categories = action.payload
         },
         addCategory: (state, action) => {
-            state.category.push(action.payload)
+            state.categories.push(action.payload)
         },
         updateCategory: (state, action) => {
-            const index = state.category.findIndex(categ => categ._id === action.payload._id)
-            if(index !== -1) state.category[index] = action.payload
+            const index = state.categories.findIndex(categ => categ._id === action.payload._id)
+            if(index !== -1) state.categories[index] = action.payload
         },
         deleteCategory: (state, action) => {
-            state.category = state.category.filter(categ => categ._id !== action.payload)
+            state.categories = state.categories.filter(categ => categ._id !== action.payload)
         }
     }
 })

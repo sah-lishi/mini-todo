@@ -19,6 +19,7 @@ const Header = () => {
       {/* Middle: Search bar */}
       <div className="flex items-center w-full sm:w-[60%] md:w-[45%] bg-gray-100 rounded-full px-4 py-2 shadow-sm">
         <input
+        id="search bar"
           type="text"
           placeholder="Search your task here..."
           className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm sm:text-base"

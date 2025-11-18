@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import TaskCard from "../../components/TaskCard";
-import TodoModal from "../../components/TodoModal";
+import TaskCard from "../../components/Todo/TaskCard";
+import TodoModal from "../../components/Todo/TodoModal";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import FloatingButton from "../../components/FloatingButton";
-import CommonTodoModal from "../../components/CommonTodoModal";
+import FloatingButton from "../../components/Button/FloatingButton";
+import CommonTodoModal from "../../components/Todo/CommonTodoModal";
 import {useDispatch, useSelector} from "react-redux"
 import axios from "axios"
 import { setTodos, addTodo, updateTodo, deleteTodo } from "../../features/todo/todoSlice";
@@ -89,7 +89,7 @@ const MyTodo = () => {
               onSubmit={handleSubmit}
           />
           {/* Page title */}
-          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Tasks</h2>
+          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Todos</h2>
         
           {/* Grid area */}
           <div className="grid gap-4">

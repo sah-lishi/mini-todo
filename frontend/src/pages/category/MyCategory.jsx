@@ -1,18 +1,18 @@
-import CommonCategoryModal from '../../components/CommonCategoryModal'
-import CategoryCard from '../../components/CategoryCard'
+import CommonCategoryModal from '../../components/Category/CommonCategoryModal'
+import CategoryCard from '../../components/Category/CategoryCard'
 import { useEffect, useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import FloatingButton from "../../components/FloatingButton";
+import FloatingButton from "../../components/Button/FloatingButton";
 import {useDispatch, useSelector} from "react-redux"
 import axios from "axios"
-import TodoModal from "../../components/TodoModal"
+import TodoModal from "../../components/Todo/TodoModal"
 import { setCategory, addCategory, deleteCategory, updateCategory } from '../../features/category/categorySlice'; 
 function MyCategory() {
   const [openModal, setOpenModal] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [editCategoryData, setEditCategoryData] = useState(null)
   const dispatch = useDispatch()
-  const {category} = useSelector((state) =>state.category)
+  const category = useSelector((state) =>state.category.categories)
 
   useEffect(() => {
     const fetchAllCategory = async() => {
@@ -115,7 +115,7 @@ function MyCategory() {
                 </p>
 
                 <button
-                  onClick={handleAddCategory}
+                  onClick={handleAddClick}
                   className="mt-6 bg-[#ff8b82] text-white px-6 py-2 rounded-xl hover:bg-[#ff7166] transition-all"
                 >
                   Create Category

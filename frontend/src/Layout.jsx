@@ -1,6 +1,6 @@
-import Header from './components/Header'
+import Header from './components/Header/Header'
 import { Outlet } from 'react-router-dom'
-import Sidebar from './components/SideBar'
+import Sidebar from './components/Sidebar/SideBar'
 import { useEffect, useState } from 'react';
 
 function Layout() {
