@@ -1,6 +1,10 @@
 import TaskCard from "../../components/TaskCard";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+  const {user} = useSelector((state) => state.auth)
+  console.log(user);
+  
   return (
     <div className="min-h-screen bg-[#f5f7fb] relative">
      
@@ -8,7 +12,7 @@ const Dashboard = () => {
         <main className="flex-1 p-6 md:p-8 transition-all duration-300">
           {/* Welcome */}
           <h2 className="text-2xl font-semibold mb-4">
-            Welcome back, <span className="text-[#ff8b82]">Sundar</span> 👋
+            Welcome back, <span className="text-[#ff8b82]">{user?.username}</span> 👋
           </h2>
 
           {/* Grid area */}

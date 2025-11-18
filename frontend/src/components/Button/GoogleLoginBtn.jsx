@@ -1,7 +1,7 @@
 import {GoogleLogin} from '@react-oauth/google'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import {loginUser as signupSlice} from '../features/auth/authSlice'
+import {loginUser as signupSlice} from '../../features/auth/authSlice'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 

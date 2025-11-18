@@ -1,6 +1,6 @@
 import SidebarItem from "./SideBarItem"
 import { useState } from "react";
-import LogoutModal from "./LogoutModal";
+import LogoutModal from "../LogoutModal";
 import { useLocation } from "react-router-dom";
 import {
   FaTasks,
@@ -11,10 +11,12 @@ import {
   FaBars,
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import {useSelector} from 'react-redux'
 
 const Sidebar = ({isOpen, toggle}) => {
     const [openLogout, setOpenLogout] = useState(false)
     const location = useLocation(); // Detect current URL
+    const {user} = useSelector((state) => state.auth)
     return (
     <div
         className={`${
@@ -41,9 +43,9 @@ const Sidebar = ({isOpen, toggle}) => {
             <img
             src="https://via.placeholder.com/80"
             alt="user"
-            className="w-20 h-20 rounded-full border-4 border-white mb-3"
+            className="w-20 h-20 rounded-full border-2 border-white mb-3"
             />
-            <h3 className="text-lg font-semibold">Sundar Gurung</h3>
+            <h3 className="text-lg font-semibold">{user?.username}</h3>
         </div>
 
         {/* Navigation */}

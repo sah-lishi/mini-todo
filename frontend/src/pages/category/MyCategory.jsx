@@ -1,99 +1,93 @@
+import CommonCategoryModal from '../../components/CommonCategoryModal'
+import CategoryCard from '../../components/CategoryCard'
 import { useEffect, useState } from "react";
-import TaskCard from "../../components/TaskCard";
-import TodoModal from "../../components/TodoModal";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import FloatingButton from "../../components/FloatingButton";
-import CommonTodoModal from "../../components/CommonTodoModal";
 import {useDispatch, useSelector} from "react-redux"
 import axios from "axios"
-import { setTodos, addTodo, updateTodo, deleteTodo } from "../../features/todo/todoSlice";
-const MyTodo = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const [editTodoData, setEditTodoData] = useState(null);
-  const [selectedTodo, setSelectedTodo] = useState(null);
+import TodoModal from "../../components/TodoModal"
+import { setCategory, addCategory, deleteCategory, updateCategory } from '../../features/category/categorySlice'; 
+function MyCategory() {
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [editCategoryData, setEditCategoryData] = useState(null)
   const dispatch = useDispatch()
-
-  const {todos} = useSelector((state) => state.todo)
+  const {category} = useSelector((state) =>state.category)
 
   useEffect(() => {
-    const fetchAllTodo = async() => {
+    const fetchAllCategory = async() => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/todos/", {
+        const res = await axios.get("http://localhost:8000/api/v1/category/", {
           withCredentials: true
         })
-        dispatch(setTodos(res.data.data))
+        dispatch(setCategory(res.data.data))
       } catch (error) {
         console.log(error);
       }
     }
-    fetchAllTodo()
+    fetchAllCategory()
   }, [])
-  
-  const handleDelete = async(id) => {
+  const handleAddClick = () => {
+    setOpenModal(true)
+    setEditCategoryData(null)
+  }
+  const handleSubmit = async(categoryData) => {
+    // editCategoryData !== null -> old data update
+    if (editCategoryData) {
+      try {
+        const res = await axios.patch(`http://localhost:8000/api/v1/category/${editCategoryData._id}`, categoryData, {
+            withCredentials: true
+          })
+        dispatch(updateCategory(res.data.data))
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else {
+      // editCategoryData === null -> new data add
+      try {
+        const res = await axios.post(`http://localhost:8000/api/v1/category/`, categoryData, {
+            withCredentials: true
+          })
+        dispatch(addCategory(res.data.data))
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  }
+  const handleDeleteClick = async(id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
+      await axios.delete(`http://localhost:8000/api/v1/category/${id}`, {
         withCredentials: true
       })
-      dispatch(deleteTodo(id))
+      dispatch(deleteCategory(id))
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleAddTodo = () => {
-    setOpenModal(true)
-    setEditTodoData(null)
   }
-
-  const handleEditClick = (todo) => {
-    setEditTodoData(todo)
+  const handleEditClick = (categ) => {
+    setEditCategoryData(categ)
     setOpenModal(true)
   }
-
-  const handleSubmit = async(todoData) => {
-    if(editTodoData){
-      try {
-        const res = await axios.patch(
-          `http://localhost:8000/api/v1/todos/${editTodoData._id}`,
-          todoData,
-          { withCredentials: true }
-        );
-        dispatch(updateTodo(res.data.data));
-      } catch (error) {
-        console.log(error.message);
-      }
-      }
-    else{
-      try {
-        const res = await axios.post(`http://localhost:8000/api/v1/todos/`, todoData, {withCredentials: true})    
-        dispatch(addTodo(res.data.data))
-        console.log("Create todo:", todoData); 
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-  }
-
   return (
     <div className="min-h-screen bg-[#f5f7fb] relative">
         {/* Main content */}
         <main className="flex-1 p-6 md:p-8 transition-all duration-300">
-          {todos?.length > 0 && (
-            <FloatingButton icon={<FaPlus/>} onClick={handleAddTodo} />
+          {category?.length > 0 && (
+            <FloatingButton icon={<FaPlus/>} onClick={handleAddClick} />
           )}
           {/* TodoModal for add/edit todo */}
-          <CommonTodoModal
+          <CommonCategoryModal
               isOpen={openModal}
               onClose={() => {setOpenModal(false)}}
-              initialData={editTodoData}
+              initialData={editCategoryData}
               onSubmit={handleSubmit}
           />
           {/* Page title */}
-          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Tasks</h2>
+          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Categories</h2>
         
           {/* Grid area */}
           <div className="grid gap-4">
-            {todos?.length === 0 && (
+            {category?.length === 0 && (
               <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-2xl shadow-sm border border-gray-100">
                 
                 <div className="mb-4">
@@ -113,38 +107,34 @@ const MyTodo = () => {
                 </div>
 
                 <h2 className="text-xl font-semibold text-gray-700">
-                  No Tasks Yet
+                  No Catgeory Yet
                 </h2>
 
                 <p className="text-sm text-gray-500 max-w-xs mt-1">
-                  Looks like you haven't created any tasks. Start by adding your first one!
+                  Looks like you haven't created any category. Start by adding your first one!
                 </p>
 
                 <button
-                  onClick={handleAddTodo}
+                  onClick={handleAddCategory}
                   className="mt-6 bg-[#ff8b82] text-white px-6 py-2 rounded-xl hover:bg-[#ff7166] transition-all"
                 >
-                  Create Task
+                  Create Category
                 </button>
 
               </div>
 
             )}
-              {todos?.length > 0 && todos.map((todo) => (
-                <TaskCard
-                    key={todo._id}
-                    title={todo.title}
-                    desc={todo.description}
-                    priority={todo.priority}
-                    status={todo.status}
-                    color={todo.color}
-                    onClick={() => setSelectedTodo(todo)}
+              {category?.length > 0 && category.map((categ) => (
+                <CategoryCard
+                    key={categ._id}
+                    name={categ.name}
+                    onClick={() => setSelectedCategory(categ)}
                 >
                     {/* edit/delete buttons must NOT trigger modal → stopPropagation() */}
                     <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
                     <button
                         className="p-2 text-gray-800 border border-blue-600 rounded-md hover:bg-blue-600 flex flex-col items-center"
-                        onClick={() => handleEditClick(todo)}
+                        onClick={() => handleEditClick(categ)}
                     >
                         <FaEdit size={14} />
                         Edit
@@ -152,23 +142,22 @@ const MyTodo = () => {
 
                     <button
                         className="p-2 text-gray-800 border border-red-600 rounded-md hover:bg-red-600 flex flex-col items-center"
-                        onClick={() => handleDelete(todo._id)}
+                        onClick={() => handleDeleteClick(categ._id)}
                     >
                         <FaTrash size={14} />
                         Delete
                     </button>
                     </div>
-                  </TaskCard>
+                  </CategoryCard>
                 ))
               }
           </div>
 
-          {/* POPUP MODAL for viewing todo*/}
-          <TodoModal todo={selectedTodo} onClose={() => setSelectedTodo(null)} />
+          {/* POPUP MODAL */}
+          <TodoModal categ={selectedCategory} onClose={() => setSelectedCategory(null)} />
         </main>
     </div>
+  )
+}
 
-  );
-};
-
-export default MyTodo;
+export default MyCategory

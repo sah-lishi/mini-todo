@@ -4,7 +4,7 @@ import SignIn from './pages/auth/SignIn'
 import Dashboard from './pages/dashboard/Dashboard'
 import Layout from './Layout'
 import MyTodo from './pages/todo/MyTodo'
-
+import MyCategory from './pages/category/MyCategory'
 function App() {
   return (
     <Router>
@@ -14,6 +14,7 @@ function App() {
         <Route path='/home' element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="mytodo" element={<MyTodo />} />
+          <Route path="mycategory" element={<MyCategory />} />
         </Route>
       </Routes>
     </Router>
