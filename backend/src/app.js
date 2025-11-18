@@ -2,9 +2,9 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 const app = express()
-
+const allowedOrigin = ['http://localhost:5173']
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigin,
     credentials: true
 }))
 

@@ -1,7 +1,7 @@
 import SidebarItem from "./SideBarItem"
 import { useState } from "react";
 import LogoutModal from "./LogoutModal";
-
+import { useLocation } from "react-router-dom";
 import {
   FaTasks,
   FaListUl,
@@ -13,8 +13,8 @@ import {
 import { MdDashboard } from "react-icons/md";
 
 const Sidebar = ({isOpen, toggle}) => {
-    const [activeTab, setActiveTab] = useState("dashboard");
     const [openLogout, setOpenLogout] = useState(false)
+    const location = useLocation(); // Detect current URL
     return (
     <div
         className={`${
@@ -52,40 +52,35 @@ const Sidebar = ({isOpen, toggle}) => {
             to="/home/dashboard"
             icon={<MdDashboard />}
             text="Dashboard"
-            active={activeTab === "dashboard"}
-            onClick={() => setActiveTab("dashboard")}
+            active={location.pathname ==="/home/dashboard"}
             isSidebarOpen={isOpen}
             />
             <SidebarItem
             to="/home/mytodo"
             icon={<FaTasks />}
             text="My Task"
-            active={activeTab === "task"}
-            onClick={() => setActiveTab("task")}
+            active={location.pathname.startsWith("/home/mytodo")}
             isSidebarOpen={isOpen}
             />
             <SidebarItem
             to="/home/mycategory"
             icon={<FaListUl />}
             text="Task Categories"
-            active={activeTab === "category"}
-            onClick={() => setActiveTab("category")}
+            active={location.pathname.startsWith("/home/mycategory")}
             isSidebarOpen={isOpen}
             />
             <SidebarItem
             to="/home/settings"
             icon={<FaCog />}
             text="Settings"
-            active={activeTab === "settings"}
-            onClick={() => setActiveTab("settings")}
+            active={location.pathname === "/home/settings"}
             isSidebarOpen={isOpen}
             />
             <SidebarItem
             to="/home/help"
             icon={<FaQuestionCircle />}
             text="Help"
-            active={activeTab === "help"}
-            onClick={() => setActiveTab("help")}
+            active={location.pathname === "/home/help"}
             isSidebarOpen={isOpen}
             />
         </nav>
@@ -94,7 +89,6 @@ const Sidebar = ({isOpen, toggle}) => {
         {/* Logout button */}
         <div className="px-4 py-6">
         <SidebarItem
-            
             icon={<FaSignOutAlt />}
             text="Logout"
             active={false}

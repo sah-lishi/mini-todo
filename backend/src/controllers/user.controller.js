@@ -56,11 +56,27 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!userCreated) {
         throw new apiError(500, "Something went wrong while registering the user")
     }
+    // destructure tokens
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
+    const options = {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    }
 
-    return res.status(201).json(
-        new apiResponse(201, userCreated, "User registered successfully")
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+        new apiResponse(
+            200, {
+                user: userCreated, accessToken, refreshToken
+            },
+            "User registered successfully"
+        )
     )
-
 })
 
 // login
@@ -70,8 +86,6 @@ const loginUser = asyncHandler(async(req, res) => {
         throw new apiError(400, "email is required")
     }
     const user = await User.findOne({email}).select("+password")
-    
-    
     //if user doesn't exist
     if (!user) {
         throw new apiError(404, "User does not exist")
@@ -97,7 +111,8 @@ const loginUser = asyncHandler(async(req, res) => {
     const options = {
         httpOnly: true,
         secure: false,
-        sameSite: "none",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
     }
 
     return res
@@ -145,7 +160,7 @@ const logoutUser = asyncHandler(async (req,res) => {
     const options = {
         httpOnly: true,
         secure: false,
-        sameSite: "none",
+        sameSite: "strict",
     }
 
     return res.status(200)

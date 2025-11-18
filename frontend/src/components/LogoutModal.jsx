@@ -1,21 +1,26 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { logoutUser } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
+import axios from 'axios'
+import {useDispatch} from "react-redux"
 export default function LogoutModal({ isOpen, onClose }) {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch()
   if (!isOpen) return null;
 
   const handleLogout = async() => {
     try {
-      await axios.post("http://localhost:8000/api/v1/users/logout", {}, {withCredentials: true,})
+      axios.defaults.withCredentials = true
+      await axios.post("http://localhost:8000/api/v1/users/logout")
       toast.success("Log out successful")
       // dispatch user data to redux store
       dispatch(logoutUser())
       // Navigate to login page
       navigate("/")
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to logout")
+      console.log(error);
+      
+      toast.error(error.message)
     }
   }
 
