@@ -12,7 +12,7 @@ export default function CommonCategoryModal({ isOpen, onClose, onSubmit, initial
   useEffect(() => {
     if (initialData) {
       setForm({
-        title: initialData.title || ""
+        name: initialData.name || ""
       });
     }
   }, [initialData]);

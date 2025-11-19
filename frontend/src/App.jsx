@@ -5,6 +5,8 @@ import Dashboard from './pages/dashboard/Dashboard'
 import Layout from './Layout'
 import MyTodo from './pages/todo/MyTodo'
 import MyCategory from './pages/category/MyCategory'
+import './App.css';
+
 function App() {
   return (
     <Router>

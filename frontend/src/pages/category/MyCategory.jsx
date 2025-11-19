@@ -5,11 +5,9 @@ import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import FloatingButton from "../../components/Button/FloatingButton";
 import {useDispatch, useSelector} from "react-redux"
 import axios from "axios"
-import TodoModal from "../../components/Todo/TodoModal"
 import { setCategory, addCategory, deleteCategory, updateCategory } from '../../features/category/categorySlice'; 
 function MyCategory() {
   const [openModal, setOpenModal] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState(null)
   const [editCategoryData, setEditCategoryData] = useState(null)
   const dispatch = useDispatch()
   const category = useSelector((state) =>state.category.categories)
@@ -73,9 +71,9 @@ function MyCategory() {
         {/* Main content */}
         <main className="flex-1 p-6 md:p-8 transition-all duration-300">
           {category?.length > 0 && (
-            <FloatingButton icon={<FaPlus/>} onClick={handleAddClick} />
+            <FloatingButton icon={<FaPlus/>} onClick={handleAddClick} name="Add Category" />
           )}
-          {/* TodoModal for add/edit todo */}
+          {/* CategoryModal for add/edit todo */}
           <CommonCategoryModal
               isOpen={openModal}
               onClose={() => {setOpenModal(false)}}
@@ -83,7 +81,7 @@ function MyCategory() {
               onSubmit={handleSubmit}
           />
           {/* Page title */}
-          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Categories</h2>
+          <h2 className="text-xl sm:text-2xl text-[#ff8b82] font-semibold mb-4">My Categories</h2>
         
           {/* Grid area */}
           <div className="grid gap-4">
@@ -124,37 +122,33 @@ function MyCategory() {
               </div>
 
             )}
-              {category?.length > 0 && category.map((categ) => (
-                <CategoryCard
-                    key={categ._id}
-                    name={categ.name}
-                    onClick={() => setSelectedCategory(categ)}
-                >
-                    {/* edit/delete buttons must NOT trigger modal → stopPropagation() */}
-                    <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
-                    <button
-                        className="p-2 text-gray-800 border border-blue-600 rounded-md hover:bg-blue-600 flex flex-col items-center"
-                        onClick={() => handleEditClick(categ)}
-                    >
-                        <FaEdit size={14} />
-                        Edit
-                    </button>
+            {category?.length > 0 && category.map((cat) => (
+              <CategoryCard
+                  key={cat._id}
+                  category={cat}
+              >
+                  {/* edit/delete buttons must NOT trigger modal → stopPropagation() */}
+                  <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
+                  <button
+                      className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
+                      onClick={() => handleEditClick(categ)}
+                  >
+                      <FaEdit className="text-gray-800" size={16} />
+                      Edit
+                  </button>
 
-                    <button
-                        className="p-2 text-gray-800 border border-red-600 rounded-md hover:bg-red-600 flex flex-col items-center"
-                        onClick={() => handleDeleteClick(categ._id)}
-                    >
-                        <FaTrash size={14} />
-                        Delete
-                    </button>
-                    </div>
-                  </CategoryCard>
-                ))
-              }
+                  <button
+                      className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
+                      onClick={() => handleDeleteClick(categ._id)}
+                  >
+                      <FaTrash className="text-gray-800" size={16}/>
+                      Delete
+                  </button>
+                  </div>
+                </CategoryCard>
+              ))
+            }
           </div>
-
-          {/* POPUP MODAL */}
-          <TodoModal categ={selectedCategory} onClose={() => setSelectedCategory(null)} />
         </main>
     </div>
   )

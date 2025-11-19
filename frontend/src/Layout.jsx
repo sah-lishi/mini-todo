@@ -32,7 +32,7 @@ function Layout() {
             left: 0,
             width: `${sidebarWidth}px`,
             height: `calc(100vh - ${headerHeight}px)`,
-            overflowY: "hidden",
+            overflowY: "auto",
             transition: "width 300ms ease",
             zIndex: 40
           }}>

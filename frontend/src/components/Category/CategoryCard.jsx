@@ -1,19 +1,34 @@
-const CategoryCard = ({name, children, onClick}) => {
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react"; 
+import CategoryTodoList from "./CategoryTodoList";
+
+const CategoryCard = ({category, children, }) => {
+  const [open, setOpen] = useState(false);
   return (
     <div
-      onClick={onClick}
-      className={`bg-gray-50 p-4 rounded-lg mb-4 shadow hover:shadow-md transition cursor-pointer border-l-4 `}
+      className={`bg-gray-50 p-4 border-gray-300 rounded-lg mb-1 hover:shadow-md transition cursor-pointer border `}
     >
-      <div className="flex justify-between items-start">
-        <div>
-          <h4 className="font-semibold">{name}</h4>
-        </div>
-
-        {/* Slot for edit/delete buttons */}
-        {children}
+      <div className="flex justify-between items-center">
+        {/* header */}
+        <h4 className="font-semibold">{category.name}</h4>
+          <div className="flex items-center gap-3">
+            {/* Slot for edit/delete buttons */}
+            {children}
+            {/* Dropdown */}
+            <button onClick={() => setOpen(!open)}>
+              {open ? <ChevronUp /> : <ChevronDown />}
+            </button>
+          </div>
       </div>
+        {/* Todo List */}
+        {open && (
+          <div className="mt-4">
+            <CategoryTodoList categoryId={category._id} />
+          </div>
+        )}
     </div>
   );
 };
 
 export default CategoryCard;
+

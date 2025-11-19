@@ -24,8 +24,6 @@ export default function CommonTodoModal({ isOpen, onClose, onSubmit, initialData
     category: ""
   });
   const categories= useSelector((state) => state.category.categories)
-  categories.map((cat)=> console.log(cat.name)
-  )  
   const [errors, setErrors] = useState({});
 
   // Load initial data into form (useful in edit mode)
@@ -38,7 +36,7 @@ export default function CommonTodoModal({ isOpen, onClose, onSubmit, initialData
         status: initialData.status || "",
         dueDate: initialData.dueDate ? initialData.dueDate.split("T")[0] : "",
         completedAt: initialData.completedAt ? initialData.completedAt.split("T")[0] : "",
-        category: initialData.category || "none"
+        category: initialData.category || ""
       });
     }
   }, [initialData]);
@@ -90,12 +88,10 @@ export default function CommonTodoModal({ isOpen, onClose, onSubmit, initialData
                 className="border border-gray-300 rounded px-2 py-1 text-sm"
               >
                 <option value="">Select Category</option>
-                <option value="none">
-                  No Category
-                </option>
+                <option value="">No Category</option>
             
                 {categories?.length > 0 && categories?.map((cat) => (
-                  <option key={cat._id} value={cat.name}>
+                  <option key={cat._id} value={cat._id}>
                     {cat.name}
                   </option>
                 ))}

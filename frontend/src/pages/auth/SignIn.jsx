@@ -25,7 +25,7 @@ const SignIn = () => {
 
       toast.success("Login successful")
       dispatch(signinSlice(res.data.data.user))
-      navigate("/home/dashboard")
+      navigate("/home/mytodo")
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed")
     }

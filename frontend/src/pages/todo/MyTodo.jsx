@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import TaskCard from "../../components/Todo/TaskCard";
 import TodoModal from "../../components/Todo/TodoModal";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi"
+import { MdEdit } from "react-icons/md"
+import { FaPencilAlt } from "react-icons/fa"
 import FloatingButton from "../../components/Button/FloatingButton";
 import CommonTodoModal from "../../components/Todo/CommonTodoModal";
 import {useDispatch, useSelector} from "react-redux"
@@ -13,7 +16,7 @@ const MyTodo = () => {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const dispatch = useDispatch()
 
-  const {todos} = useSelector((state) => state.todo)
+  const todos = useSelector((state) => state.todo.todos)
 
   useEffect(() => {
     const fetchAllTodo = async() => {
@@ -62,9 +65,11 @@ const MyTodo = () => {
       } catch (error) {
         console.log(error.message);
       }
-      }
+    }
     else{
       try {
+        console.log(todoData);
+        
         const res = await axios.post(`http://localhost:8000/api/v1/todos/`, todoData, {withCredentials: true})    
         dispatch(addTodo(res.data.data))
         console.log("Create todo:", todoData); 
@@ -79,7 +84,7 @@ const MyTodo = () => {
         {/* Main content */}
         <main className="flex-1 p-6 md:p-8 transition-all duration-300">
           {todos?.length > 0 && (
-            <FloatingButton icon={<FaPlus/>} onClick={handleAddTodo} />
+            <FloatingButton icon={<FaPlus/>} onClick={handleAddTodo} name="Add Todo"/>
           )}
           {/* TodoModal for add/edit todo */}
           <CommonTodoModal
@@ -89,7 +94,7 @@ const MyTodo = () => {
               onSubmit={handleSubmit}
           />
           {/* Page title */}
-          <h2 className="text-2xl text-[#ff8b82] font-semibold mb-4">My Todos</h2>
+          <h2 className="text-xl sm:text-2xl text-[#ff8b82] font-semibold mb-4">My Todos</h2>
         
           {/* Grid area */}
           <div className="grid gap-4">
@@ -133,28 +138,24 @@ const MyTodo = () => {
               {todos?.length > 0 && todos.map((todo) => (
                 <TaskCard
                     key={todo._id}
-                    title={todo.title}
-                    desc={todo.description}
-                    priority={todo.priority}
-                    status={todo.status}
-                    color={todo.color}
+                    todo={todo}
                     onClick={() => setSelectedTodo(todo)}
                 >
                     {/* edit/delete buttons must NOT trigger modal → stopPropagation() */}
                     <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
                     <button
-                        className="p-2 text-gray-800 border border-blue-600 rounded-md hover:bg-blue-600 flex flex-col items-center"
+                        className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
                         onClick={() => handleEditClick(todo)}
                     >
-                        <FaEdit size={14} />
+                       <FaEdit className="text-gray-800" size={16}/>
                         Edit
                     </button>
 
                     <button
-                        className="p-2 text-gray-800 border border-red-600 rounded-md hover:bg-red-600 flex flex-col items-center"
+                        className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
                         onClick={() => handleDelete(todo._id)}
                     >
-                        <FaTrash size={14} />
+                        <FaTrash className="text-gray-800" size={16}/>
                         Delete
                     </button>
                     </div>
