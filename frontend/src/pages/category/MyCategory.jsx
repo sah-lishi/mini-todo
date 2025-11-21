@@ -131,7 +131,7 @@ function MyCategory() {
                   <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
                   <button
                       className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
-                      onClick={() => handleEditClick(categ)}
+                      onClick={() => handleEditClick(cat)}
                   >
                       <FaEdit className="text-gray-800" size={16} />
                       Edit
@@ -139,7 +139,7 @@ function MyCategory() {
 
                   <button
                       className="p-2 sm:p-2 text-gray-800 rounded-md flex flex-col items-center hover:bg-[#ff8b82] transition-all duration-200"
-                      onClick={() => handleDeleteClick(categ._id)}
+                      onClick={() => handleDeleteClick(cat._id)}
                   >
                       <FaTrash className="text-gray-800" size={16}/>
                       Delete

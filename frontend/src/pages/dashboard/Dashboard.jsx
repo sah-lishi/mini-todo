@@ -5,6 +5,8 @@ const Dashboard = () => {
   const {user} = useSelector((state) => state.auth)
   console.log(user);
   
+  const todos = useSelector((state) => state.todo.todos)
+  const highPriorityTodos = todos.filter(todo => todo.priority === "high");
   return (
     <div className="min-h-screen bg-[#f5f7fb] relative">
      
@@ -20,45 +22,28 @@ const Dashboard = () => {
             {/* To-Do Section */}
             <div className="bg-white p-5 rounded-xl shadow-md">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-[#ff8b82]">To-Do</h3>
+                <h3 className="text-lg font-semibold text-[#ff8b82]">Incompleted To-Do</h3>
                 <button className="text-sm text-blue-500 hover:underline">
                   + Add Task
                 </button>
               </div>
-
-              <TaskCard
-                title="Attend Nischal’s Birthday Party"
-                desc="Buy gifts on the way and pick up cake from the bakery. [6 PM | Fresh Elements]"
-                priority="Moderate"
-                status="Not Started"
-                color="red"
-              />
-              <TaskCard
-                title="Landing Page Design for TravelDays"
-                desc="Get the work done by EOD and discuss with client before leaving."
-                priority="Moderate"
-                status="In Progress"
-                color="blue"
-              />
+              {todos.map((todo) => {
+                if (todo.priority !== "high")
+                 return (<TaskCard key={todo._id} todo={todo}/>)
+                })
+              } 
+              
             </div>
 
-            {/* Completed Section */}
+            {/* Hign-priority Todo Section */}
             <div className="bg-white p-5 rounded-xl shadow-md">
               <h3 className="text-lg font-semibold text-green-600 mb-4">
-                Completed Tasks
+                High-priority Todo
               </h3>
-              <TaskCard
-                title="Walk the Dog"
-                desc="Take the dog to the park and bring treats."
-                status="Completed"
-                color="green"
-              />
-              <TaskCard
-                title="Conduct Meeting"
-                desc="Meet with the client and finalize requirements."
-                status="Completed"
-                color="green"
-              />
+              {highPriorityTodos.map((todo) => (
+                <TaskCard key={todo._id} todo={todo}/>
+              ))
+              } 
             </div>
           </div>
         </main>

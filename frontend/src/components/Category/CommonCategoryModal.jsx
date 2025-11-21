@@ -52,14 +52,16 @@ export default function CommonCategoryModal({ isOpen, onClose, onSubmit, initial
         <div className="border-2 border-gray-200 p-4">
         {/* Title */}
         <div className="mb-3">
-          <label className="block font-semibold">Category Name</label>
+          <label className="block font-semibold">Category Name
           <input
             type="text"
+            autoComplete="name"
             name="name"
             value={form.name}
             onChange={handleChange}
             className="w-full border-2 border-gray-200 p-2 rounded"
           />
+          </label>
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
         

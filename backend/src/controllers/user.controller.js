@@ -4,6 +4,7 @@ import {User} from '../models/user.model.js'
 import {uploadOnCloudinary} from '../utils/cloudinary_upload.js'
 import {apiResponse} from '../utils/apiResponse.js'
 import hasValidMxRecord from '../utils/mxLookup.js'
+import jwt from "jsonwebtoken"
 
 // user registration
 const registerUser = asyncHandler(async (req, res) => {
@@ -72,7 +73,7 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(
         new apiResponse(
             200, {
-                user: userCreated, accessToken, refreshToken
+                user: userCreated
             },
             "User registered successfully"
         )
@@ -122,7 +123,7 @@ const loginUser = asyncHandler(async(req, res) => {
     .json(
         new apiResponse(
             200, {
-                user: loggedInUser, accessToken, refreshToken
+                user: loggedInUser
             },
             "User logged in successfully"
         )
@@ -171,7 +172,7 @@ const logoutUser = asyncHandler(async (req,res) => {
 
 // new access token generation using refersh token
 const refreshAccessToken = asyncHandler(async(req, res) => {
-    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+    const incomingRefreshToken = req.cookies.refreshToken
 
     if(!incomingRefreshToken){
         throw new apiError(401, "unauthorized request")
@@ -184,11 +185,13 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
     
-        const user = await User.findById(decodedToken?._id)    
+        const user = await User.findById(decodedToken?._id).select("+refreshToken")    
     
         if (!user) {
             throw new apiError(401, "Invalid refresh token")
         }
+   
+    console.log(user?.refreshToken);
     
         if (incomingRefreshToken !== user?.refreshToken) {
             throw new apiError(401, "Refresh token expired/used")
@@ -196,19 +199,19 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
     
         const options = {
             httpOnly: true,
-            secure: true
+            secure: false,
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         }
     
-        const {accessToken, newrefreshToken} = await generateAccessAndRefreshToken(user._id)
+        const accessToken = user.generateAccessToken()
     
         return res
         .status(200)
-        .cookie("accessToken", accessToken)
-        .cookie("refreshToken", newrefreshToken)
+        .cookie("accessToken", accessToken, options)
         .json(
             new apiResponse(
                 200,
-                {accessToken, refreshToken: newrefreshToken,},
                 "Access token refreshed successfully"
             )
         )
