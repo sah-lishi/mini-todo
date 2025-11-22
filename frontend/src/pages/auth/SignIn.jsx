@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser as signinSlice } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import userService from "../../services/userService";
 
 const SignIn = () => {
   const [loginData, setLoginData] = useState({email: "", password: ""})
@@ -19,15 +20,12 @@ const SignIn = () => {
   const handleSubmit = async(e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/users/login", loginData, {
-        withCredentials: true
-      });
-
+      const res = await userService.login(loginData)
       toast.success("Login successful")
-      dispatch(signinSlice(res.data.data.user))
+      dispatch(signinSlice(res.data.user))
       navigate("/home/dashboard")
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed")
+      toast.error(error?.data?.message || error?.message || "Login failed")
     }
   }
   const handleSuccess = async(credentialResponse) => {
