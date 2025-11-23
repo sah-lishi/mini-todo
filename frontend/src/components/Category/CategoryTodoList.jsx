@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import TaskCard from "../Todo/TaskCard";
-import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function CategoryTodoList({ categoryId }) {
   const todos = useSelector(state => state.todo.todos);

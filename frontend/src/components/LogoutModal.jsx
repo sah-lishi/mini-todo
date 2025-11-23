@@ -3,6 +3,7 @@ import { logoutUser } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
 import axios from 'axios'
 import {useDispatch} from "react-redux"
+import userService from "../services/userService";
 export default function LogoutModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
@@ -10,16 +11,13 @@ export default function LogoutModal({ isOpen, onClose }) {
 
   const handleLogout = async() => {
     try {
-      axios.defaults.withCredentials = true
-      await axios.post("http://localhost:8000/api/v1/users/logout")
-      toast.success("Log out successful")
+      await userService.logout()
       // dispatch user data to redux store
       dispatch(logoutUser())
       // Navigate to login page
       navigate("/")
     } catch (error) {
       console.log(error);
-      
       toast.error(error.message)
     }
   }

@@ -7,24 +7,24 @@ import MyTodo from './pages/todo/MyTodo'
 import MyCategory from './pages/category/MyCategory'
 import './App.css';
 import { useDispatch } from 'react-redux'
-import axios from 'axios'
 import { loginUser as setCredential} from './features/auth/authSlice'
 import { setTodos } from './features/todo/todoSlice'
 import { useEffect } from 'react'
+import userService from './services/userService'
+import todosService from './services/todosService'
 
 function App() {
   const dispatch = useDispatch()
   useEffect(()=> {
     async function restoreSession() {
       try {
-        await axios.post("http://localhost:8000/api/v1/users/access-token", {}, {withCredentials: true})
-        const userRes = await axios.get("http://localhost:8000/api/v1/users/current-user", {withCredentials: true})
-        dispatch(setCredential(userRes.data.data))
-        const todosRes = await axios.get("http://localhost:8000/api/v1/todos/", {withCredentials: true})
-        dispatch(setTodos(todosRes.data.data))
+        await userService.refreshAccesstoken()
+        const userRes = await userService.userDetail()
+        dispatch(setCredential(userRes.data))
+        const todosRes = await todosService.fetchAllTodo()
+        dispatch(setTodos(todosRes.data))
       } catch (error) {
         console.log(error);
-        
       }
     }
     restoreSession()

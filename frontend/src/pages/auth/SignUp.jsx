@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import {loginUser as signupSlice} from "../../features/auth/authSlice"
 import { useNavigate } from "react-router-dom";
+import userService from "../../services/userService";
+import googleAuthService from "../../services/googleAuthService";
 const SignUp = () => {
   const [signupData, setSignupData] = useState({username: "", email: "", password: ""})
   const dispatch = useDispatch()
@@ -18,10 +20,10 @@ const SignUp = () => {
   const handleSubmit = async(e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/users/register", signupData, {withCredentials: true})
+      const res = await userService.registerUser(signupData)
       toast.success("Sign up successful")
       // dispatch user data to redux store
-      dispatch(signupSlice(res.data.data.user))
+      dispatch(signupSlice(res.data.user))
       navigate("/home/dashboard")
     } catch (error) {
       toast.error(error.response?.data?.message || "Sign up failed")
@@ -29,11 +31,11 @@ const SignUp = () => {
   }
   const handleSuccess = async(credentialResponse) => {
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/gauth/google-signup", {credential: credentialResponse.credential}, {withCredentials: true})
+      const res = await googleAuthService.googleSignup(credentialResponse.credential)
       console.log("Signup with google success:", res.data);
       toast.success("Sign up with google successful")
       // dispatch user data to redux store
-      dispatch(signupSlice(res.data.data.user))
+      dispatch(signupSlice(res.data.user))
       navigate("/home/dashboard")
     } catch (error) {
       console.log("Google signup failed: ", error);

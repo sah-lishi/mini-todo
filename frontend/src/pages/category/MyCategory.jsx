@@ -6,6 +6,7 @@ import FloatingButton from "../../components/Button/FloatingButton";
 import {useDispatch, useSelector} from "react-redux"
 import axios from "axios"
 import { setCategory, addCategory, deleteCategory, updateCategory } from '../../features/category/categorySlice'; 
+import categoryService from '../../services/categoryService';
 function MyCategory() {
   const [openModal, setOpenModal] = useState(false)
   const [editCategoryData, setEditCategoryData] = useState(null)
@@ -13,17 +14,15 @@ function MyCategory() {
   const category = useSelector((state) =>state.category.categories)
 
   useEffect(() => {
-    const fetchAllCategory = async() => {
+    const fetchCategory = async() => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/category/", {
-          withCredentials: true
-        })
-        dispatch(setCategory(res.data.data))
+        const res = await categoryService.fetchAllCategory()
+        dispatch(setCategory(res.data))
       } catch (error) {
         console.log(error);
       }
     }
-    fetchAllCategory()
+    fetchCategory()
   }, [])
   const handleAddClick = () => {
     setOpenModal(true)
@@ -33,20 +32,16 @@ function MyCategory() {
     // editCategoryData !== null -> old data update
     if (editCategoryData) {
       try {
-        const res = await axios.patch(`http://localhost:8000/api/v1/category/${editCategoryData._id}`, categoryData, {
-            withCredentials: true
-          })
-        dispatch(updateCategory(res.data.data))
+        const res = await categoryService.updateCategory(categoryData)
+        dispatch(updateCategory(res.data))
       } catch (error) {
         console.log(error.message);
       }
     } else {
       // editCategoryData === null -> new data add
       try {
-        const res = await axios.post(`http://localhost:8000/api/v1/category/`, categoryData, {
-            withCredentials: true
-          })
-        dispatch(addCategory(res.data.data))
+        const res = await categoryService.addNewCategory(categoryData)
+        dispatch(addCategory(res.data))
       } catch (error) {
         console.log(error.message);
       }
@@ -54,9 +49,7 @@ function MyCategory() {
   }
   const handleDeleteClick = async(id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/category/${id}`, {
-        withCredentials: true
-      })
+      await categoryService.deleteCategory(id)
       dispatch(deleteCategory(id))
     } catch (error) {
       console.log(error);

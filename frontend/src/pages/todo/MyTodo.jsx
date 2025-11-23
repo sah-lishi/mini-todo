@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import TaskCard from "../../components/Todo/TaskCard";
 import TodoModal from "../../components/Todo/TodoModal";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { FiEdit } from "react-icons/fi"
-import { MdEdit } from "react-icons/md"
-import { FaPencilAlt } from "react-icons/fa"
 import FloatingButton from "../../components/Button/FloatingButton";
 import CommonTodoModal from "../../components/Todo/CommonTodoModal";
 import {useDispatch, useSelector} from "react-redux"
-import axios from "axios"
 import { setTodos, addTodo, updateTodo, deleteTodo } from "../../features/todo/todoSlice";
+import todosService from '../../services/todosService'
 const MyTodo = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editTodoData, setEditTodoData] = useState(null);
@@ -21,10 +18,8 @@ const MyTodo = () => {
   useEffect(() => {
     const fetchAllTodo = async() => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/todos/", {
-          withCredentials: true
-        })
-        dispatch(setTodos(res.data.data))
+        const res = await todosService.fetchAllTodo()
+        dispatch(setTodos(res.data))
       } catch (error) {
         console.log(error);
       }
@@ -34,9 +29,7 @@ const MyTodo = () => {
   
   const handleDelete = async(id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/todos/${id}`, {
-        withCredentials: true
-      })
+      await todosService.deleteTodo(id)
       dispatch(deleteTodo(id))
     } catch (error) {
       console.log(error);
@@ -56,12 +49,8 @@ const MyTodo = () => {
   const handleSubmit = async(todoData) => {
     if(editTodoData){
       try {
-        const res = await axios.patch(
-          `http://localhost:8000/api/v1/todos/${editTodoData._id}`,
-          todoData,
-          { withCredentials: true }
-        );
-        dispatch(updateTodo(res.data.data));
+        const res = await todosService.deleteTodo(todoData)
+        dispatch(updateTodo(res.data));
       } catch (error) {
         console.log(error.message);
       }
@@ -69,9 +58,8 @@ const MyTodo = () => {
     else{
       try {
         console.log(todoData);
-        
-        const res = await axios.post(`http://localhost:8000/api/v1/todos/`, todoData, {withCredentials: true})    
-        dispatch(addTodo(res.data.data))
+        const res = await todosService.addNewTodo(todoData)
+        dispatch(addTodo(res.data))
         console.log("Create todo:", todoData); 
       } catch (error) {
         console.log(error.message);

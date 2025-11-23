@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const {user} = useSelector((state) => state.auth)
-  console.log(user);
-  
   const todos = useSelector((state) => state.todo.todos)
   const highPriorityTodos = todos.filter(todo => todo.priority === "high");
   return (

@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { loginUser as signinSlice } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
+import googleAuthService from "../../services/googleAuthService";
 
 const SignIn = () => {
   const [loginData, setLoginData] = useState({email: "", password: ""})
@@ -30,10 +31,10 @@ const SignIn = () => {
   }
   const handleSuccess = async(credentialResponse) => {
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/gauth/google-signup", {credential: credentialResponse.credential}, {withCredentials: true})
+      const res = await googleAuthService.googleSignup( credentialResponse.credential)
       toast.success("Sign up with google successful")
       // dispatch user data to redux store
-      dispatch(signinSlice(res.data.data.user))
+      dispatch(signinSlice(res.data.user))
       navigate("/home/dashboard")
     } catch (error) {
       console.log("SignIn with google failed: ", error);
