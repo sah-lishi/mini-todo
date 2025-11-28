@@ -39,6 +39,7 @@ const MyTodo = () => {
     }
     else{
       await addTodo(todoData)
+      await getLatestTodos()
     }
   }
 

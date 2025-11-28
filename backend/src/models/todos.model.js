@@ -18,7 +18,7 @@ const todosSchema = new Schema({
     },
     priority: {
         type: String,
-        enum: ["low", "medium", "high"],
+        enum: ["low", "moderate", "high"],
         default: "low"
     },
     dueDate: {

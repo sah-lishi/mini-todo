@@ -10,7 +10,7 @@ const todosService = {
         return res.data
     },
     fetchTodosWithoutCategory: async () => { 
-        const res = await api.get("/todos//no-category")
+        const res = await api.get("/todos/no-category")
         return res.data
     },
     fetchTodosWithCategory: async (categoryId) => { 

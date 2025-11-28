@@ -29,11 +29,9 @@ function useMyTodo() {
       }
     }
     const addTodo = async (todoData) => {
-        try {
-            console.log(todoData);
-            const res = await todosService.addNewTodo(todoData)
-            dispatch(add(res.data))
-            console.log("Create todo:", todoData); 
+      try {
+          const res = await todosService.addNewTodo(todoData)
+          dispatch(add(res.data))
       } catch (error) {
             console.log(error.message);
       }
