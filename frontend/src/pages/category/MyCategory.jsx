@@ -3,57 +3,34 @@ import CategoryCard from '../../components/Category/CategoryCard'
 import { useEffect, useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import FloatingButton from "../../components/Button/FloatingButton";
-import {useDispatch, useSelector} from "react-redux"
-import axios from "axios"
-import { setCategory, addCategory, deleteCategory, updateCategory } from '../../features/category/categorySlice'; 
-import categoryService from '../../services/categoryService';
+import {useSelector} from "react-redux"
+import useMycategory from '../../hooks/category/useMycategory';
+
 function MyCategory() {
   const [openModal, setOpenModal] = useState(false)
   const [editCategoryData, setEditCategoryData] = useState(null)
-  const dispatch = useDispatch()
+  
   const category = useSelector((state) =>state.category.categories)
-
+  const {getLatestCat, deleteCat, editCat, addCat} = useMycategory()
   useEffect(() => {
-    const fetchCategory = async() => {
-      try {
-        const res = await categoryService.fetchAllCategory()
-        dispatch(setCategory(res.data))
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchCategory()
+    getLatestCat()
   }, [])
   const handleAddClick = () => {
     setOpenModal(true)
     setEditCategoryData(null)
   }
   const handleSubmit = async(categoryData) => {
-    // editCategoryData !== null -> old data update
+    // editCategoryData !== null -> old data update    
     if (editCategoryData) {
-      try {
-        const res = await categoryService.updateCategory(categoryData)
-        dispatch(updateCategory(res.data))
-      } catch (error) {
-        console.log(error.message);
-      }
+      await editCat(editCategoryData._id, categoryData)
     } else {
       // editCategoryData === null -> new data add
-      try {
-        const res = await categoryService.addNewCategory(categoryData)
-        dispatch(addCategory(res.data))
-      } catch (error) {
-        console.log(error.message);
-      }
+      await addCat(categoryData)
+      await getLatestCat()
     }
   }
   const handleDeleteClick = async(id) => {
-    try {
-      await categoryService.deleteCategory(id)
-      dispatch(deleteCategory(id))
-    } catch (error) {
-      console.log(error);
-    }
+    await deleteCat(id)
   }
   const handleEditClick = (categ) => {
     setEditCategoryData(categ)
