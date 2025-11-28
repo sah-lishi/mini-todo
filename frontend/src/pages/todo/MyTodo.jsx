@@ -4,36 +4,23 @@ import TodoModal from "../../components/Todo/TodoModal";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import FloatingButton from "../../components/Button/FloatingButton";
 import CommonTodoModal from "../../components/Todo/CommonTodoModal";
-import {useDispatch, useSelector} from "react-redux"
-import { setTodos, addTodo, updateTodo, deleteTodo } from "../../features/todo/todoSlice";
-import todosService from '../../services/todosService'
+import {useSelector} from "react-redux"
+import useMyTodo from "../../hooks/todos/useMyTodo";
+
 const MyTodo = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editTodoData, setEditTodoData] = useState(null);
   const [selectedTodo, setSelectedTodo] = useState(null);
-  const dispatch = useDispatch()
-
   const todos = useSelector((state) => state.todo.todos)
-
+  const {getLatestTodos, deleteATodo, editTodo, addTodo} = useMyTodo()
   useEffect(() => {
-    const fetchAllTodo = async() => {
-      try {
-        const res = await todosService.fetchAllTodo()
-        dispatch(setTodos(res.data))
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchAllTodo()
+    // this will run when todo is up, del, edit or added
+    // get todos from DB and update the RTK store 
+    getLatestTodos()
   }, [])
   
   const handleDelete = async(id) => {
-    try {
-      await todosService.deleteTodo(id)
-      dispatch(deleteTodo(id))
-    } catch (error) {
-      console.log(error);
-    }
+    await deleteATodo(id)
   };
 
   const handleAddTodo = () => {
@@ -48,22 +35,10 @@ const MyTodo = () => {
 
   const handleSubmit = async(todoData) => {
     if(editTodoData){
-      try {
-        const res = await todosService.deleteTodo(todoData)
-        dispatch(updateTodo(res.data));
-      } catch (error) {
-        console.log(error.message);
-      }
+      await editTodo(editTodoData._id, todoData)
     }
     else{
-      try {
-        console.log(todoData);
-        const res = await todosService.addNewTodo(todoData)
-        dispatch(addTodo(res.data))
-        console.log("Create todo:", todoData); 
-      } catch (error) {
-        console.log(error.message);
-      }
+      await addTodo(todoData)
     }
   }
 

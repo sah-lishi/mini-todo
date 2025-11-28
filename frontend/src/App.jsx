@@ -6,27 +6,12 @@ import Layout from './Layout'
 import MyTodo from './pages/todo/MyTodo'
 import MyCategory from './pages/category/MyCategory'
 import './App.css';
-import { useDispatch } from 'react-redux'
-import { loginUser as setCredential} from './features/auth/authSlice'
-import { setTodos } from './features/todo/todoSlice'
 import { useEffect } from 'react'
-import userService from './services/userService'
-import todosService from './services/todosService'
+import useRestoreSession from './hooks/session/useRestoreSession'
 
 function App() {
-  const dispatch = useDispatch()
+  const restoreSession = useRestoreSession()
   useEffect(()=> {
-    async function restoreSession() {
-      try {
-        await userService.refreshAccesstoken()
-        const userRes = await userService.userDetail()
-        dispatch(setCredential(userRes.data))
-        const todosRes = await todosService.fetchAllTodo()
-        dispatch(setTodos(todosRes.data))
-      } catch (error) {
-        console.log(error);
-      }
-    }
     restoreSession()
   }, [])
   return (

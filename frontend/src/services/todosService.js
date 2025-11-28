@@ -25,8 +25,8 @@ const todosService = {
         const res = await api.delete(`/todos/${todoId}`)
         return res.data
     },
-    updateTodo: async (todoData) => { 
-        const res = await api.patch(`/todos/${todoData._id}`, todoData)
+    updateTodo: async (id, todoData) => { 
+        const res = await api.patch(`/todos/${id}`, todoData)
         return res.data
     },
 }

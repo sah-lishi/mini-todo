@@ -2,48 +2,25 @@ import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import {Link} from "react-router-dom"
 import {GoogleLogin} from '@react-oauth/google'
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { loginUser as signinSlice } from "../../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
-import userService from "../../services/userService";
-import googleAuthService from "../../services/googleAuthService";
-
+import useSignin from "../../hooks/authentication/useSignin";
 const SignIn = () => {
   const [loginData, setLoginData] = useState({email: "", password: ""})
-  const dispatch = useDispatch()
-  const navigate = useNavigate()  
+  const {login, signinWithGoogle} = useSignin()
   const handleChange = (e) => {
     setLoginData({...loginData, [e.target.name]: e.target.value})
   }
   const handleSubmit = async(e) => {
     e.preventDefault()
-    try {
-      const res = await userService.login(loginData)
-      toast.success("Login successful")
-      dispatch(signinSlice(res.data.user))
-      navigate("/home/dashboard")
-    } catch (error) {
-      toast.error(error?.data?.message || error?.message || "Login failed")
-    }
+    await login(loginData)
   }
   const handleSuccess = async(credentialResponse) => {
-    try {
-      const res = await googleAuthService.googleSignup( credentialResponse.credential)
-      toast.success("Sign up with google successful")
-      // dispatch user data to redux store
-      dispatch(signinSlice(res.data.user))
-      navigate("/home/dashboard")
-    } catch (error) {
-      console.log("SignIn with google failed: ", error);
-    }
-
+    await signinWithGoogle(credentialResponse)
   }
   const handleError = () => {
-        console.log("Google login failed");
-        toast.error("Google login failed")
+    console.log("Google login failed");
+    toast.error("Google login failed")
   }
   
   return (
